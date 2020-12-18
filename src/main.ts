@@ -1,21 +1,27 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 
-function createWindow() {
+async function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true
     },
     width: 800,
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, "../index.html"));
+  await mainWindow.loadFile(path.join(__dirname, "../index.html"));
+  let count = 0;
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  setInterval(() => {
+    count++;
+    mainWindow.webContents.send('msgFromMain',count);
+  }, 100);
+
+
+
 }
 
 // This method will be called when Electron has finished
